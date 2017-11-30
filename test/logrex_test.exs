@@ -1,8 +1,4 @@
 defmodule LogrexTest do
-  use ExUnit.Case
+  use Logrex.DataCase
   doctest Logrex
-
-  test "greets the world" do
-    assert Logrex.hello() == :world
-  end
 end

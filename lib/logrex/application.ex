@@ -4,12 +4,12 @@ defmodule Logrex.Application do
   @moduledoc false
 
   use Application
+  import Supervisor.Spec
 
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Starts a worker by calling: Logrex.Worker.start_link(arg)
-      # {Logrex.Worker, arg},
+      supervisor(Logrex.Repo, []),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

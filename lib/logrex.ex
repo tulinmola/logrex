@@ -3,7 +3,8 @@ defmodule Logrex do
   Logrex public API.
   """
 
-  alias Logrex.Query
+  alias Logrex.{Channels, Query, Repo}
+  alias Ecto.Multi
 
   @doc """
   Logs message to given channel by type with content.
@@ -26,6 +27,30 @@ defmodule Logrex do
 
   """
   def log(type, message) do
-    Query.insert_message(type, message)
+    transaction = Multi.new
+      |> Multi.run(:message, fn _ -> Query.insert_message(type, message) end)
+      |> Multi.run(:broadcast, &Channels.broadcast(&1.message))
+      |> Repo.transaction()
+
+    case transaction do
+      {:ok, %{message: message}} -> {:ok, message}
+      {:error, _failed_operation, failed_value, _changes_so_far} -> {:error, failed_value}
+    end
+  end
+
+  @doc """
+  Subscribes to a channel. Messages will come to subscriptor pid in the form of
+  `{:message, %{type: "foo", id: 1, content: %{...}}}`.
+
+  This function returns `:ok` when subscription was correct.
+
+  ## Examples
+
+      iex> Logrex.subscribe("foo")
+      :ok
+
+  """
+  def subscribe(type) do
+    Channels.subscribe(type)
   end
 end

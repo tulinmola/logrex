@@ -31,6 +31,7 @@ defmodule Logrex.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.1"},
       {:poison, "~> 3.1"},
+      {:phoenix_pubsub, "~> 1.0"},
     ]
   end
 

@@ -10,6 +10,7 @@ defmodule Logrex.Application do
     # List all child processes to be supervised
     children = [
       supervisor(Logrex.Repo, []),
+      supervisor(Phoenix.PubSub.PG2, [Logrex.PubSub, []]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

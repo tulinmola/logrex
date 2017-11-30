@@ -20,6 +20,15 @@ end
 Console example:
 
 ```
+iex> Logrex.subscribe("test")
+:ok
 iex> Logrex.log("test", %{foo: "bar"})
-{:ok, %Logrex.Message{...}}
+{:ok, %Logrex.Message{content: %{foo: "bar"}, id: 1, type: "test", ...}}
+iex> flush
+%Logrex.Message{content: %{foo: "bar"}, id: 1, type: "test", ...}
+:ok
+iex> Logrex.log("other", %{foo: "bar"})
+{:ok, %Logrex.Message{content: %{foo: "bar"}, id: 1, type: "other", ...}}
+iex> flush
+:ok
 ```
